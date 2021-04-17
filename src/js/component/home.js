@@ -1,12 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 //create your first component
 export function Home() {
 	const [todo, setTodo] = useState();
 	const [todos, setTodos] = useState([
-		"Mi primer tarea",
-		"Mi segunda tarea",
-		"Mi tercer tarea"
+		{ label: "Mi primera tarea", done: false },
+		{ label: "Mi segunda tarea", done: false },
+		{ label: "Mi tercer tarea", done: false }
 	]);
 	const agregar = e => {
 		if (Object.keys(todo).length === 0 || todo.trim() === "") {
@@ -30,6 +30,20 @@ export function Home() {
 		// console.log(e.target.value);
 		setTodo(e.target.value);
 	};
+
+	const getTodo = async () => {
+		const res = await fetch(
+			"https://assets.breatheco.de/apis/fake/todos/user/luigui52"
+		);
+		const data = await res.json();
+		console.log(data);
+		setTodos(data);
+	};
+
+	useEffect(() => {
+		getTodo();
+	}, []);
+
 	return (
 		<div className="container-fluid">
 			<div className="p-3 mb-2 bg-primary text-white">
@@ -64,7 +78,7 @@ export function Home() {
 						key={index}
 						index={index}
 						className="list-group-item font-weith-lighter">
-						{item}
+						{item.label}
 						<button
 							// la funcion de abajo evita que se autollame
 							onClick={() => eliminar(index)}
